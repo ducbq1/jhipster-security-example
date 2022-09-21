@@ -2,6 +2,7 @@ package com.untralvious.demo.security.service;
 
 import com.untralvious.demo.security.config.Constants;
 import com.untralvious.demo.security.domain.Authority;
+import com.untralvious.demo.security.domain.SysRole;
 import com.untralvious.demo.security.domain.SysUser;
 import com.untralvious.demo.security.domain.User;
 import com.untralvious.demo.security.repository.AuthorityRepository;
@@ -11,6 +12,8 @@ import com.untralvious.demo.security.repository.UserRepository;
 import com.untralvious.demo.security.security.AuthoritiesConstants;
 import com.untralvious.demo.security.security.SecurityUtils;
 import com.untralvious.demo.security.service.dto.AdminUserDTO;
+import com.untralvious.demo.security.service.dto.SysRoleDTO;
+import com.untralvious.demo.security.service.dto.SysUserDTO;
 import com.untralvious.demo.security.service.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +100,7 @@ public class SysUserService {
             });
     }
 
-    public User registerUser(AdminUserDTO userDTO, String password) {
+    public SysUser registerUser(AdminUserDTO userDTO, String password) {
         sysUserRepository
             .findOneByLogin(userDTO.getLogin().toLowerCase())
             .ifPresent(existingUser -> {
@@ -114,25 +117,25 @@ public class SysUserService {
                     throw new EmailAlreadyUsedException();
                 }
             });
-        User newUser = new User();
+        SysUser newUser = new SysUser();
         String encryptedPassword = passwordEncoder.encode(password);
-        newUser.setLogin(userDTO.getLogin().toLowerCase());
+        newUser.setUsername(userDTO.getLogin().toLowerCase());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
-        newUser.setFirstName(userDTO.getFirstName());
-        newUser.setLastName(userDTO.getLastName());
+        newUser.setRealName(userDTO.getFirstName() + userDTO.getLastName());
         if (userDTO.getEmail() != null) {
             newUser.setEmail(userDTO.getEmail().toLowerCase());
         }
-        newUser.setImageUrl(userDTO.getImageUrl());
-        newUser.setLangKey(userDTO.getLangKey());
+        newUser.setAvatar(userDTO.getImageUrl());
+        newUser.setOrgCode(userDTO.getLangKey());
         // new user is not active
-        newUser.setActivated(false);
+        newUser.setStatus(0);
         // new user gets registration key
-        newUser.setActivationKey(RandomUtil.generateActivationKey());
-        Set<Authority> authorities = new HashSet<>();
-        sysRoleRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
-        newUser.setAuthorities(authorities);
+        newUser.setOrgCode(RandomUtil.generateActivationKey());
+        Set<SysRole> authorities = new HashSet<>();
+//        sysRoleRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        sysRoleRepository.findById(userDTO.getId()).ifPresent(authorities::add);
+        newUser.setIds(authorities);
         sysUserRepository.save(newUser);
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
@@ -149,8 +152,8 @@ public class SysUserService {
         return true;
     }
 
-    public User createUser(AdminUserDTO userDTO) {
-        User user = new User();
+    public SysUser createUser(AdminUserDTO userDTO) {
+        SysUser user = new SysUser();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -169,14 +172,14 @@ public class SysUserService {
         user.setResetDate(Instant.now());
         user.setActivated(true);
         if (userDTO.getAuthorities() != null) {
-            Set<Authority> authorities = userDTO
+            Set<SysRole> authorities = userDTO
                 .getAuthorities()
                 .stream()
                 .map(sysRoleRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
-            user.setAuthorities(authorities);
+            user.setIds(authorities);
         }
         sysUserRepository.save(user);
         this.clearUserCaches(user);
@@ -205,7 +208,7 @@ public class SysUserService {
                 user.setAvatar(userDTO.getImageUrl());
                 user.setStatus(userDTO.isActivated() ? 1 : 0);
                 user.setOrgCode(userDTO.getLangKey());
-                Set<Authority> managedAuthorities = user.getAuthorities();
+                Set<SysRole> managedAuthorities = user.getIds();
                 managedAuthorities.clear();
                 userDTO
                     .getAuthorities()
@@ -245,13 +248,12 @@ public class SysUserService {
             .getCurrentUserLogin()
             .flatMap(sysUserRepository::findOneByLogin)
             .ifPresent(user -> {
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
+                user.setRealName(firstName + lastName);
                 if (email != null) {
                     user.setEmail(email.toLowerCase());
                 }
-                user.setLangKey(langKey);
-                user.setImageUrl(imageUrl);
+                user.setOrgCode(langKey);
+                user.setAvatar(imageUrl);
                 this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
             });
@@ -275,22 +277,22 @@ public class SysUserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable) {
-        return sysUserRepository.findAll(pageable).map(AdminUserDTO::new);
+    public Page<SysUserDTO> getAllManagedUsers(Pageable pageable) {
+        return sysUserRepository.findAll(pageable).map(SysUserDTO::new);
     }
 
     @Transactional(readOnly = true)
-    public Page<UserDTO> getAllPublicUsers(Pageable pageable) {
-        return sysUserRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(UserDTO::new);
+    public Page<SysUserDTO> getAllPublicUsers(Pageable pageable) {
+        return sysUserRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(SysUserDTO::new);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
+    public Optional<SysUser> getUserWithAuthoritiesByLogin(String login) {
         return sysUserRepository.findOneWithAuthoritiesByLogin(login);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthorities() {
+    public Optional<SysUser> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(sysUserRepository::findOneWithAuthoritiesByLogin);
     }
 
@@ -304,7 +306,7 @@ public class SysUserService {
         sysUserRepository
             .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
             .forEach(user -> {
-                log.debug("Deleting not activated user {}", user.getLogin());
+                log.debug("Deleting not activated user {}", user.getUsername());
                 sysUserRepository.delete(user);
                 this.clearUserCaches(user);
             });
@@ -316,7 +318,7 @@ public class SysUserService {
      */
     @Transactional(readOnly = true)
     public List<String> getAuthorities() {
-        return sysRoleRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+        return sysRoleRepository.findAll().stream().map(SysRole::getRoleName).collect(Collectors.toList());
     }
 
     private void clearUserCaches(SysUser user) {
