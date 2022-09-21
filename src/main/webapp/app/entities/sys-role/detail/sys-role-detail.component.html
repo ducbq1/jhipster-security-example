@@ -1,0 +1,56 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="sysRole">
+      <h2 data-cy="sysRoleDetailsHeading"><span>Sys Role</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Id</span></dt>
+        <dd>
+          <span>{{ sysRole.id }}</span>
+        </dd>
+        <dt><span>Role Name</span></dt>
+        <dd>
+          <span>{{ sysRole.roleName }}</span>
+        </dd>
+        <dt><span>Role Code</span></dt>
+        <dd>
+          <span>{{ sysRole.roleCode }}</span>
+        </dd>
+        <dt><span>Description</span></dt>
+        <dd>
+          <span>{{ sysRole.description }}</span>
+        </dd>
+        <dt><span>Create By</span></dt>
+        <dd>
+          <span>{{ sysRole.createBy }}</span>
+        </dd>
+        <dt><span>Create Time</span></dt>
+        <dd>
+          <span>{{ sysRole.createTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Update By</span></dt>
+        <dd>
+          <span>{{ sysRole.updateBy }}</span>
+        </dd>
+        <dt><span>Update Time</span></dt>
+        <dd>
+          <span>{{ sysRole.updateTime | formatMediumDatetime }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/sys-role', sysRole.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

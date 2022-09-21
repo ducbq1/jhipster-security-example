@@ -1,0 +1,310 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-sys-user-heading" data-cy="SysUserCreateUpdateHeading">Create or edit a Sys User</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">Id</label>
+          <input type="text" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          <div *ngIf="editForm.get('id')!.invalid && (editForm.get('id')!.dirty || editForm.get('id')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('id')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_username">Username</label>
+          <input type="text" class="form-control" name="username" id="field_username" data-cy="username" formControlName="username" />
+          <div *ngIf="editForm.get('username')!.invalid && (editForm.get('username')!.dirty || editForm.get('username')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('username')?.errors?.maxlength">
+              This field cannot be longer than 100 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_realName">Real Name</label>
+          <input type="text" class="form-control" name="realName" id="field_realName" data-cy="realName" formControlName="realName" />
+          <div *ngIf="editForm.get('realName')!.invalid && (editForm.get('realName')!.dirty || editForm.get('realName')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('realName')?.errors?.maxlength">
+              This field cannot be longer than 100 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_password">Password</label>
+          <input type="text" class="form-control" name="password" id="field_password" data-cy="password" formControlName="password" />
+          <div *ngIf="editForm.get('password')!.invalid && (editForm.get('password')!.dirty || editForm.get('password')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('password')?.errors?.maxlength">
+              This field cannot be longer than 255 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_salt">Salt</label>
+          <input type="text" class="form-control" name="salt" id="field_salt" data-cy="salt" formControlName="salt" />
+          <div *ngIf="editForm.get('salt')!.invalid && (editForm.get('salt')!.dirty || editForm.get('salt')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('salt')?.errors?.maxlength">
+              This field cannot be longer than 45 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_avatar">Avatar</label>
+          <input type="text" class="form-control" name="avatar" id="field_avatar" data-cy="avatar" formControlName="avatar" />
+          <div *ngIf="editForm.get('avatar')!.invalid && (editForm.get('avatar')!.dirty || editForm.get('avatar')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('avatar')?.errors?.maxlength">
+              This field cannot be longer than 255 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_birthday">Birthday</label>
+          <div class="d-flex">
+            <input
+              id="field_birthday"
+              data-cy="birthday"
+              type="datetime-local"
+              class="form-control"
+              name="birthday"
+              formControlName="birthday"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_sex">Sex</label>
+          <input type="checkbox" class="form-check" name="sex" id="field_sex" data-cy="sex" formControlName="sex" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_email">Email</label>
+          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" />
+          <div *ngIf="editForm.get('email')!.invalid && (editForm.get('email')!.dirty || editForm.get('email')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('email')?.errors?.maxlength">
+              This field cannot be longer than 45 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_phone">Phone</label>
+          <input type="text" class="form-control" name="phone" id="field_phone" data-cy="phone" formControlName="phone" />
+          <div *ngIf="editForm.get('phone')!.invalid && (editForm.get('phone')!.dirty || editForm.get('phone')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('phone')?.errors?.maxlength">
+              This field cannot be longer than 45 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_orgCode">Org Code</label>
+          <input type="text" class="form-control" name="orgCode" id="field_orgCode" data-cy="orgCode" formControlName="orgCode" />
+          <div *ngIf="editForm.get('orgCode')!.invalid && (editForm.get('orgCode')!.dirty || editForm.get('orgCode')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('orgCode')?.errors?.maxlength">
+              This field cannot be longer than 64 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_status">Status</label>
+          <input type="number" class="form-control" name="status" id="field_status" data-cy="status" formControlName="status" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_delFlag">Del Flag</label>
+          <input type="number" class="form-control" name="delFlag" id="field_delFlag" data-cy="delFlag" formControlName="delFlag" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_thirdId">Third Id</label>
+          <input type="text" class="form-control" name="thirdId" id="field_thirdId" data-cy="thirdId" formControlName="thirdId" />
+          <div *ngIf="editForm.get('thirdId')!.invalid && (editForm.get('thirdId')!.dirty || editForm.get('thirdId')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('thirdId')?.errors?.maxlength">
+              This field cannot be longer than 100 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_thirdType">Third Type</label>
+          <input type="text" class="form-control" name="thirdType" id="field_thirdType" data-cy="thirdType" formControlName="thirdType" />
+          <div *ngIf="editForm.get('thirdType')!.invalid && (editForm.get('thirdType')!.dirty || editForm.get('thirdType')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('thirdType')?.errors?.maxlength">
+              This field cannot be longer than 100 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_activitySync">Activity Sync</label>
+          <input
+            type="number"
+            class="form-control"
+            name="activitySync"
+            id="field_activitySync"
+            data-cy="activitySync"
+            formControlName="activitySync"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_workNo">Work No</label>
+          <input type="text" class="form-control" name="workNo" id="field_workNo" data-cy="workNo" formControlName="workNo" />
+          <div *ngIf="editForm.get('workNo')!.invalid && (editForm.get('workNo')!.dirty || editForm.get('workNo')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('workNo')?.errors?.maxlength">
+              This field cannot be longer than 100 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_post">Post</label>
+          <input type="text" class="form-control" name="post" id="field_post" data-cy="post" formControlName="post" />
+          <div *ngIf="editForm.get('post')!.invalid && (editForm.get('post')!.dirty || editForm.get('post')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('post')?.errors?.maxlength">
+              This field cannot be longer than 100 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_telephone">Telephone</label>
+          <input type="text" class="form-control" name="telephone" id="field_telephone" data-cy="telephone" formControlName="telephone" />
+          <div *ngIf="editForm.get('telephone')!.invalid && (editForm.get('telephone')!.dirty || editForm.get('telephone')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('telephone')?.errors?.maxlength">
+              This field cannot be longer than 45 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_createBy">Create By</label>
+          <input type="text" class="form-control" name="createBy" id="field_createBy" data-cy="createBy" formControlName="createBy" />
+          <div *ngIf="editForm.get('createBy')!.invalid && (editForm.get('createBy')!.dirty || editForm.get('createBy')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('createBy')?.errors?.maxlength">
+              This field cannot be longer than 32 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_createTime">Create Time</label>
+          <div class="d-flex">
+            <input
+              id="field_createTime"
+              data-cy="createTime"
+              type="datetime-local"
+              class="form-control"
+              name="createTime"
+              formControlName="createTime"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_updateBy">Update By</label>
+          <input type="text" class="form-control" name="updateBy" id="field_updateBy" data-cy="updateBy" formControlName="updateBy" />
+          <div *ngIf="editForm.get('updateBy')!.invalid && (editForm.get('updateBy')!.dirty || editForm.get('updateBy')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('updateBy')?.errors?.maxlength">
+              This field cannot be longer than 32 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_updateTime">Update Time</label>
+          <div class="d-flex">
+            <input
+              id="field_updateTime"
+              data-cy="updateTime"
+              type="datetime-local"
+              class="form-control"
+              name="updateTime"
+              formControlName="updateTime"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_userIdentity">User Identity</label>
+          <input
+            type="number"
+            class="form-control"
+            name="userIdentity"
+            id="field_userIdentity"
+            data-cy="userIdentity"
+            formControlName="userIdentity"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_departIds">Depart Ids</label>
+          <input type="text" class="form-control" name="departIds" id="field_departIds" data-cy="departIds" formControlName="departIds" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_relTenantIds">Rel Tenant Ids</label>
+          <input
+            type="text"
+            class="form-control"
+            name="relTenantIds"
+            id="field_relTenantIds"
+            data-cy="relTenantIds"
+            formControlName="relTenantIds"
+          />
+          <div
+            *ngIf="editForm.get('relTenantIds')!.invalid && (editForm.get('relTenantIds')!.dirty || editForm.get('relTenantIds')!.touched)"
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('relTenantIds')?.errors?.maxlength">
+              This field cannot be longer than 100 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_clientId">Client Id</label>
+          <input type="text" class="form-control" name="clientId" id="field_clientId" data-cy="clientId" formControlName="clientId" />
+          <div *ngIf="editForm.get('clientId')!.invalid && (editForm.get('clientId')!.dirty || editForm.get('clientId')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('clientId')?.errors?.maxlength">
+              This field cannot be longer than 64 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label for="field_ids">Id</label>
+          <select class="form-control" id="field_ids" data-cy="id" multiple name="ids" formControlName="ids" [compareWith]="compareSysRole">
+            <option [ngValue]="sysRoleOption" *ngFor="let sysRoleOption of sysRolesSharedCollection">{{ sysRoleOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

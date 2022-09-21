@@ -1,0 +1,275 @@
+<div>
+  <h2 id="page-heading" data-cy="SysUserHeading">
+    <span>Sys Users</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-sys-user"
+        [routerLink]="['/sys-user/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Sys User </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="sysUsers?.length === 0">
+    <span>No Sys Users found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="sysUsers && sysUsers.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span>Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="username">
+            <div class="d-flex">
+              <span>Username</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="realName">
+            <div class="d-flex">
+              <span>Real Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="password">
+            <div class="d-flex">
+              <span>Password</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="salt">
+            <div class="d-flex">
+              <span>Salt</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="avatar">
+            <div class="d-flex">
+              <span>Avatar</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="birthday">
+            <div class="d-flex">
+              <span>Birthday</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="sex">
+            <div class="d-flex">
+              <span>Sex</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="email">
+            <div class="d-flex">
+              <span>Email</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="phone">
+            <div class="d-flex">
+              <span>Phone</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="orgCode">
+            <div class="d-flex">
+              <span>Org Code</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="status">
+            <div class="d-flex">
+              <span>Status</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="delFlag">
+            <div class="d-flex">
+              <span>Del Flag</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="thirdId">
+            <div class="d-flex">
+              <span>Third Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="thirdType">
+            <div class="d-flex">
+              <span>Third Type</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="activitySync">
+            <div class="d-flex">
+              <span>Activity Sync</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="workNo">
+            <div class="d-flex">
+              <span>Work No</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="post">
+            <div class="d-flex">
+              <span>Post</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="telephone">
+            <div class="d-flex">
+              <span>Telephone</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createBy">
+            <div class="d-flex">
+              <span>Create By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createTime">
+            <div class="d-flex">
+              <span>Create Time</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="updateBy">
+            <div class="d-flex">
+              <span>Update By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="updateTime">
+            <div class="d-flex">
+              <span>Update Time</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="userIdentity">
+            <div class="d-flex">
+              <span>User Identity</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="departIds">
+            <div class="d-flex">
+              <span>Depart Ids</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="relTenantIds">
+            <div class="d-flex">
+              <span>Rel Tenant Ids</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="clientId">
+            <div class="d-flex">
+              <span>Client Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="id.id">
+            <div class="d-flex">
+              <span>Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sysUser of sysUsers; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/sys-user', sysUser.id, 'view']">{{ sysUser.id }}</a>
+          </td>
+          <td>{{ sysUser.username }}</td>
+          <td>{{ sysUser.realName }}</td>
+          <td>{{ sysUser.password }}</td>
+          <td>{{ sysUser.salt }}</td>
+          <td>{{ sysUser.avatar }}</td>
+          <td>{{ sysUser.birthday | formatMediumDatetime }}</td>
+          <td>{{ sysUser.sex }}</td>
+          <td>{{ sysUser.email }}</td>
+          <td>{{ sysUser.phone }}</td>
+          <td>{{ sysUser.orgCode }}</td>
+          <td>{{ sysUser.status }}</td>
+          <td>{{ sysUser.delFlag }}</td>
+          <td>{{ sysUser.thirdId }}</td>
+          <td>{{ sysUser.thirdType }}</td>
+          <td>{{ sysUser.activitySync }}</td>
+          <td>{{ sysUser.workNo }}</td>
+          <td>{{ sysUser.post }}</td>
+          <td>{{ sysUser.telephone }}</td>
+          <td>{{ sysUser.createBy }}</td>
+          <td>{{ sysUser.createTime | formatMediumDatetime }}</td>
+          <td>{{ sysUser.updateBy }}</td>
+          <td>{{ sysUser.updateTime | formatMediumDatetime }}</td>
+          <td>{{ sysUser.userIdentity }}</td>
+          <td>{{ sysUser.departIds }}</td>
+          <td>{{ sysUser.relTenantIds }}</td>
+          <td>{{ sysUser.clientId }}</td>
+          <td>
+            <span *ngFor="let id of sysUser.ids; let last = last">
+              <a class="form-control-static" [routerLink]="['/sys-role', id.id, 'view']">{{ id.id }}</a
+              >{{ last ? '' : ', ' }}
+            </span>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/sys-user', sysUser.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/sys-user', sysUser.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(sysUser)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

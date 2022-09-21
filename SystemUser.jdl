@@ -1,0 +1,44 @@
+entity SysUser {
+    id UUID required
+    username String unique maxlength(100)
+    realName String maxlength(100)
+    password String maxlength(255)
+    salt String maxlength(45)
+    avatar String maxlength(255)
+    birthday Instant
+    sex Boolean
+    email String unique maxlength(45)
+    phone String unique maxlength(45)
+    orgCode String maxlength(64)
+    status Integer
+    delFlag Integer
+    thirdId String maxlength(100)
+    thirdType String maxlength(100)
+    activitySync Integer
+    workNo String unique maxlength(100)
+    post String maxlength(100)
+    telephone String maxlength(45)
+    createBy String maxlength(32)
+    createTime Instant
+    updateBy String maxlength(32)
+    updateTime Instant
+    userIdentity Integer
+    departIds String
+    relTenantIds String maxlength(100)
+    clientId String maxlength(64)
+}
+
+entity SysRole {
+    id UUID required
+    roleName String maxlength(200)
+    roleCode String maxlength(100)
+    description String maxlength(255)
+    createBy String maxlength(32)
+    createTime Instant
+    updateBy String maxlength(32)
+    updateTime Instant
+}
+
+relationship ManyToMany {
+    SysUser{id} to SysRole{id}
+}

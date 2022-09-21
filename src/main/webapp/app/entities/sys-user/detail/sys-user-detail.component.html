@@ -1,0 +1,139 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="sysUser">
+      <h2 data-cy="sysUserDetailsHeading"><span>Sys User</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>Id</span></dt>
+        <dd>
+          <span>{{ sysUser.id }}</span>
+        </dd>
+        <dt><span>Username</span></dt>
+        <dd>
+          <span>{{ sysUser.username }}</span>
+        </dd>
+        <dt><span>Real Name</span></dt>
+        <dd>
+          <span>{{ sysUser.realName }}</span>
+        </dd>
+        <dt><span>Password</span></dt>
+        <dd>
+          <span>{{ sysUser.password }}</span>
+        </dd>
+        <dt><span>Salt</span></dt>
+        <dd>
+          <span>{{ sysUser.salt }}</span>
+        </dd>
+        <dt><span>Avatar</span></dt>
+        <dd>
+          <span>{{ sysUser.avatar }}</span>
+        </dd>
+        <dt><span>Birthday</span></dt>
+        <dd>
+          <span>{{ sysUser.birthday | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Sex</span></dt>
+        <dd>
+          <span>{{ sysUser.sex }}</span>
+        </dd>
+        <dt><span>Email</span></dt>
+        <dd>
+          <span>{{ sysUser.email }}</span>
+        </dd>
+        <dt><span>Phone</span></dt>
+        <dd>
+          <span>{{ sysUser.phone }}</span>
+        </dd>
+        <dt><span>Org Code</span></dt>
+        <dd>
+          <span>{{ sysUser.orgCode }}</span>
+        </dd>
+        <dt><span>Status</span></dt>
+        <dd>
+          <span>{{ sysUser.status }}</span>
+        </dd>
+        <dt><span>Del Flag</span></dt>
+        <dd>
+          <span>{{ sysUser.delFlag }}</span>
+        </dd>
+        <dt><span>Third Id</span></dt>
+        <dd>
+          <span>{{ sysUser.thirdId }}</span>
+        </dd>
+        <dt><span>Third Type</span></dt>
+        <dd>
+          <span>{{ sysUser.thirdType }}</span>
+        </dd>
+        <dt><span>Activity Sync</span></dt>
+        <dd>
+          <span>{{ sysUser.activitySync }}</span>
+        </dd>
+        <dt><span>Work No</span></dt>
+        <dd>
+          <span>{{ sysUser.workNo }}</span>
+        </dd>
+        <dt><span>Post</span></dt>
+        <dd>
+          <span>{{ sysUser.post }}</span>
+        </dd>
+        <dt><span>Telephone</span></dt>
+        <dd>
+          <span>{{ sysUser.telephone }}</span>
+        </dd>
+        <dt><span>Create By</span></dt>
+        <dd>
+          <span>{{ sysUser.createBy }}</span>
+        </dd>
+        <dt><span>Create Time</span></dt>
+        <dd>
+          <span>{{ sysUser.createTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Update By</span></dt>
+        <dd>
+          <span>{{ sysUser.updateBy }}</span>
+        </dd>
+        <dt><span>Update Time</span></dt>
+        <dd>
+          <span>{{ sysUser.updateTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>User Identity</span></dt>
+        <dd>
+          <span>{{ sysUser.userIdentity }}</span>
+        </dd>
+        <dt><span>Depart Ids</span></dt>
+        <dd>
+          <span>{{ sysUser.departIds }}</span>
+        </dd>
+        <dt><span>Rel Tenant Ids</span></dt>
+        <dd>
+          <span>{{ sysUser.relTenantIds }}</span>
+        </dd>
+        <dt><span>Client Id</span></dt>
+        <dd>
+          <span>{{ sysUser.clientId }}</span>
+        </dd>
+        <dt><span>Id</span></dt>
+        <dd>
+          <span *ngFor="let id of sysUser.ids; let last = last">
+            <a [routerLink]="['/sys-role', id.id, 'view']">{{ id.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/sys-user', sysUser.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
