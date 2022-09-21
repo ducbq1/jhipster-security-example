@@ -28,7 +28,7 @@ public class SysUser implements Serializable {
     @GeneratedValue
     @Type(type = "uuid-char")
     @Column(name = "id", length = 36, nullable = false)
-    private UUID id;
+    private Long id;
 
     @Size(max = 100)
     @Column(name = "username", length = 100, unique = true)
@@ -133,16 +133,16 @@ public class SysUser implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public UUID getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public SysUser id(UUID id) {
+    public SysUser id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

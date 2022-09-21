@@ -88,7 +88,7 @@ public class SysUserService {
     public Optional<SysUser> requestPasswordReset(String mail) {
         return sysUserRepository
             .findOneByEmailIgnoreCase(mail)
-            .filter(SysUser::status.)
+            .filter(p -> p.getStatus() == 1)
             .map(user -> {
                 user.setOrgCode(RandomUtil.generateResetKey());
                 user.setUpdateTime(Instant.now());
@@ -98,7 +98,7 @@ public class SysUserService {
     }
 
     public User registerUser(AdminUserDTO userDTO, String password) {
-        userRepository
+        sysUserRepository
             .findOneByLogin(userDTO.getLogin().toLowerCase())
             .ifPresent(existingUser -> {
                 boolean removed = removeNonActivatedUser(existingUser);
@@ -106,7 +106,7 @@ public class SysUserService {
                     throw new UsernameAlreadyUsedException();
                 }
             });
-        userRepository
+        sysUserRepository
             .findOneByEmailIgnoreCase(userDTO.getEmail())
             .ifPresent(existingUser -> {
                 boolean removed = removeNonActivatedUser(existingUser);
@@ -131,20 +131,20 @@ public class SysUserService {
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
-        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        sysRoleRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
-        userRepository.save(newUser);
+        sysUserRepository.save(newUser);
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
     }
 
-    private boolean removeNonActivatedUser(User existingUser) {
-        if (existingUser.isActivated()) {
+    private boolean removeNonActivatedUser(SysUser existingUser) {
+        if (existingUser.getStatus() == 1) {
             return false;
         }
-        userRepository.delete(existingUser);
-        userRepository.flush();
+        sysUserRepository.delete(existingUser);
+        sysUserRepository.flush();
         this.clearUserCaches(existingUser);
         return true;
     }
@@ -172,13 +172,13 @@ public class SysUserService {
             Set<Authority> authorities = userDTO
                 .getAuthorities()
                 .stream()
-                .map(authorityRepository::findById)
+                .map(sysRoleRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
-        userRepository.save(user);
+        sysUserRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
         return user;
@@ -192,26 +192,25 @@ public class SysUserService {
      */
     public Optional<AdminUserDTO> updateUser(AdminUserDTO userDTO) {
         return Optional
-            .of(userRepository.findById(userDTO.getId()))
+            .of(sysUserRepository.findById(userDTO.getId()))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .map(user -> {
                 this.clearUserCaches(user);
-                user.setLogin(userDTO.getLogin().toLowerCase());
-                user.setFirstName(userDTO.getFirstName());
-                user.setLastName(userDTO.getLastName());
+                user.setUsername(userDTO.getLogin().toLowerCase());
+                user.setRealName(userDTO.getFirstName() + userDTO.getLastName());
                 if (userDTO.getEmail() != null) {
                     user.setEmail(userDTO.getEmail().toLowerCase());
                 }
-                user.setImageUrl(userDTO.getImageUrl());
-                user.setActivated(userDTO.isActivated());
-                user.setLangKey(userDTO.getLangKey());
+                user.setAvatar(userDTO.getImageUrl());
+                user.setStatus(userDTO.isActivated() ? 1 : 0);
+                user.setOrgCode(userDTO.getLangKey());
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
                 userDTO
                     .getAuthorities()
                     .stream()
-                    .map(authorityRepository::findById)
+                    .map(sysRoleRepository::findById)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .forEach(managedAuthorities::add);
@@ -223,10 +222,10 @@ public class SysUserService {
     }
 
     public void deleteUser(String login) {
-        userRepository
+        sysUserRepository
             .findOneByLogin(login)
             .ifPresent(user -> {
-                userRepository.delete(user);
+                sysUserRepository.delete(user);
                 this.clearUserCaches(user);
                 log.debug("Deleted User: {}", user);
             });
@@ -244,7 +243,7 @@ public class SysUserService {
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils
             .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
+            .flatMap(sysUserRepository::findOneByLogin)
             .ifPresent(user -> {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
@@ -262,7 +261,7 @@ public class SysUserService {
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils
             .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
+            .flatMap(sysUserRepository::findOneByLogin)
             .ifPresent(user -> {
                 String currentEncryptedPassword = user.getPassword();
                 if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
@@ -277,22 +276,22 @@ public class SysUserService {
 
     @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(AdminUserDTO::new);
+        return sysUserRepository.findAll(pageable).map(AdminUserDTO::new);
     }
 
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllPublicUsers(Pageable pageable) {
-        return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(UserDTO::new);
+        return sysUserRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(UserDTO::new);
     }
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
+        return sysUserRepository.findOneWithAuthoritiesByLogin(login);
     }
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
-        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+        return SecurityUtils.getCurrentUserLogin().flatMap(sysUserRepository::findOneWithAuthoritiesByLogin);
     }
 
     /**
@@ -302,11 +301,11 @@ public class SysUserService {
      */
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
-        userRepository
+        sysUserRepository
             .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
             .forEach(user -> {
                 log.debug("Deleting not activated user {}", user.getLogin());
-                userRepository.delete(user);
+                sysUserRepository.delete(user);
                 this.clearUserCaches(user);
             });
     }
@@ -317,11 +316,11 @@ public class SysUserService {
      */
     @Transactional(readOnly = true)
     public List<String> getAuthorities() {
-        return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+        return sysRoleRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
 
     private void clearUserCaches(SysUser user) {
-        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getUsername());
+        Objects.requireNonNull(cacheManager.getCache(sysUserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getUsername());
         if (user.getEmail() != null) {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }

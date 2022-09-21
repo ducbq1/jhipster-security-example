@@ -1,5 +1,6 @@
 entity SysUser {
-    id UUID required
+//    id UUID required
+    id Long required
     username String unique maxlength(100)
     realName String maxlength(100)
     password String maxlength(255)
@@ -29,7 +30,8 @@ entity SysUser {
 }
 
 entity SysRole {
-    id UUID required
+//    id UUID required
+    id Long Required
     roleName String maxlength(200)
     roleCode String maxlength(100)
     description String maxlength(255)

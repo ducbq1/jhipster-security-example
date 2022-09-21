@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SysUserRepository extends SysUserRepositoryWithBagRelationships, JpaRepository<SysUser, UUID> {
-    default Optional<SysUser> findOneWithEagerRelationships(UUID id) {
+    default Optional<SysUser> findOneWithEagerRelationships(Long id) {
         return this.fetchBagRelationships(this.findById(id));
     }
 

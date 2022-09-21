@@ -238,7 +238,7 @@ public class SysUserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the sysUser, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/sys-users/{id}")
-    public ResponseEntity<SysUser> getSysUser(@PathVariable UUID id) {
+    public ResponseEntity<SysUser> getSysUser(@PathVariable Long id) {
         log.debug("REST request to get SysUser : {}", id);
         Optional<SysUser> sysUser = sysUserRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(sysUser);
